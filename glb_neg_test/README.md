@@ -2,81 +2,47 @@
 ### README.md for Terraform Configuration
 
 #### Overview
+This Terraform configuration is designed to set up a Global Load Balancer (GLB) in Google Cloud Platform. It includes the creation of necessary resources such as global addresses, backend services, health checks, URL maps, HTTP proxies, and forwarding rules.
 
-This Terraform configuration is designed to provision and manage infrastructure in a cloud environment. The configuration includes the following files:
+#### File Descriptions
 
-1. `main.tf`
-2. `outputs.tf`
-3. `terraform.tfvars`
-4. `variables.tf`
+##### `main.tf`
+- **Provider Configuration**: Specifies the Google Cloud provider, including project ID and region, which are defined as variables.
+- **Resource Definitions**: 
+  - `google_compute_global_address`: Creates a global IP address for the GLB.
+  - `google_compute_backend_service`: Sets up a backend service for the GLB, with a dynamic block to handle multiple network endpoint groups (NEGs).
+  - `google_compute_health_check`: Configures a health check for the GLB.
+  - `google_compute_url_map`: Defines a URL map for routing requests to the backend service.
+  - `google_compute_target_http_proxy`: Establishes an HTTP proxy for the GLB.
+  - `google_compute_global_forwarding_rule`: Sets up a forwarding rule for the GLB to direct traffic to the HTTP proxy.
 
-Each file plays a specific role in the Terraform setup and execution process. Below is a detailed explanation of each file.
+##### `outputs.tf`
+- Defines output variables for the Terraform configuration.
+- **Outputs**:
+  - `glb_ip`: The IP address of the Global Load Balancer.
 
----
+##### `terraform.tfvars`
+- Specifies the actual values for the variables used in the Terraform configuration.
+- **Variables**:
+  - `project_id`: The GCP project ID.
+  - `region`: The region where resources will be deployed.
+  - `negs`: A map of network endpoint groups (NEGs) to be used in the backend service.
+  - `glb_name`: The name assigned to the Global Load Balancer.
 
-#### 1. `main.tf`
+##### `variables.tf`
+- Declares the variables that are used in the Terraform configuration.
+- **Variable Declarations**:
+  - `project_id`: GCP project ID.
+  - `region`: Region for deployment.
+  - `negs`: Map type variable for NEGs.
+  - `glb_name`: Name for the GLB.
 
-This is the primary file where the actual resource definitions and configurations are defined. It includes:
+#### Usage Instructions
+1. **Initialization**: Run `terraform init` to initialize the Terraform working directory.
+2. **Planning**: Execute `terraform plan` to preview the changes Terraform will make.
+3. **Applying Changes**: Use `terraform apply` to apply the changes and set up the infrastructure.
 
-- **Resource Definitions:** Specifies the cloud resources to be created, such as VM instances, networking components, etc.
-- **Provider Configuration:** Defines the cloud provider (e.g., AWS, GCP) and any necessary authentication details.
-- **Data Sources:** If used, this section fetches information about existing infrastructure components.
-  
-**Input:** Requires specific values for variables used within this file.
-
-**Output:** Creates the defined resources in the cloud environment.
-
----
-
-#### 2. `outputs.tf`
-
-This file declares output variables that are important to understand the configuration's impact:
-
-- **Output Variables:** These are values that will be outputted after Terraform execution, such as IP addresses, resource IDs, etc.
-
-**Input:** Utilizes the outputs from resources defined in `main.tf`.
-
-**Output:** Provides readable information about the deployed resources.
-
----
-
-#### 3. `terraform.tfvars`
-
-This file contains variable values that are passed into the Terraform configuration:
-
-- **Variable Values:** Specific values for the variables declared in `variables.tf`, usually sensitive or environment-specific.
-
-**Input:** User-defined values for various Terraform variables.
-
-**Output:** These values are used in `main.tf` to customize the Terraform execution.
-
----
-
-#### 4. `variables.tf`
-
-Defines the variables that will be used across the Terraform configuration:
-
-- **Variable Declarations:** Declares the variables that need to be inputted, with optional default values and descriptions.
-
-**Input:** None (this file only declares variables).
-
-**Output:** Variable definitions used in `main.tf` and `outputs.tf`.
-
----
-
-#### Usage
-
-To use this Terraform configuration:
-
-1. **Initialization:** Run `terraform init` to initialize the working directory and pull in required providers.
-2. **Planning:** Execute `terraform plan` to see the changes that will be made.
-3. **Applying:** Run `terraform apply` to apply the changes to your cloud environment.
-
-Ensure that you have set up the necessary credentials and have Terraform installed on your machine.
-
----
-
-#### Conclusion
-
-This README provides a high-level overview of the Terraform configuration files included in this setup. Each file has a specific purpose in the lifecycle of infrastructure provisioning and management using Terraform.
+#### Notes
+- Ensure you have the necessary permissions in your GCP account to create and manage these resources.
+- Modify `terraform.tfvars` as needed to fit your specific project and regional requirements.
 
